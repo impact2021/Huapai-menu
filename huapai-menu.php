@@ -216,10 +216,10 @@ function huapai_menu_shortcode($atts) {
                     <div class="huapai-menu-item-left">
                         <h3 class="huapai-menu-item-title"><?php the_title(); ?></h3>
                         <?php 
-                        $content = get_the_content();
+                        $content = apply_filters('the_content', get_the_content());
                         if ($content) : 
                         ?>
-                            <div class="huapai-menu-item-description"><?php echo wpautop(do_shortcode($content)); ?></div>
+                            <div class="huapai-menu-item-description"><?php echo wp_kses_post($content); ?></div>
                         <?php endif; ?>
                     </div>
                     <div class="huapai-menu-item-right">
