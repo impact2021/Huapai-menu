@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Huapai Menu - Example with Custom Settings</title>
+    <link rel="stylesheet" href="assets/css/huapai-menu.css">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 0 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        h1, h2 {
+            color: #333;
+            border-bottom: 2px solid #333;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+        .section {
+            margin-bottom: 40px;
+        }
+        /* Example custom colors from settings */
+        .custom-colors .huapai-menu-item-title {
+            color: #2c3e50;
+            font-size: 1.2em;
+        }
+        .custom-colors .huapai-menu-item-description {
+            color: #7f8c8d;
+            font-size: 0.85em;
+        }
+        .custom-colors .huapai-menu-item-price {
+            color: #27ae60;
+            font-size: 1.1em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Huapai Restaurant Menu - Example with Updated Styling</h1>
+        
+        <div class="section">
+            <h2>Default Styling (Improved Spacing & Font Size)</h2>
+            <div class="huapai-menu-group">
+                <div class="huapai-menu-item">
+                    <div class="huapai-menu-item-content">
+                        <div class="huapai-menu-item-left">
+                            <h3 class="huapai-menu-item-title">Caesar Salad</h3>
+                            <div class="huapai-menu-item-description">
+                                <p>Crisp romaine lettuce with parmesan cheese, croutons, and our homemade Caesar dressing</p>
+                            </div>
+                        </div>
+                        <div class="huapai-menu-item-right">
+                            <span class="huapai-menu-item-price">$12.50</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="huapai-menu-item">
+                    <div class="huapai-menu-item-content">
+                        <div class="huapai-menu-item-left">
+                            <h3 class="huapai-menu-item-title">Garlic Bread</h3>
+                            <div class="huapai-menu-item-description">
+                                <p>Freshly baked bread with garlic butter and herbs</p>
+                            </div>
+                        </div>
+                        <div class="huapai-menu-item-right">
+                            <span class="huapai-menu-item-price">$7.00</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>With Custom Colors (Example Settings Applied)</h2>
+            <div class="huapai-menu-group custom-colors">
+                <div class="huapai-menu-item">
+                    <div class="huapai-menu-item-content">
+                        <div class="huapai-menu-item-left">
+                            <h3 class="huapai-menu-item-title">Grilled Salmon</h3>
+                            <div class="huapai-menu-item-description">
+                                <p>Atlantic salmon fillet with seasonal vegetables and lemon butter sauce</p>
+                            </div>
+                        </div>
+                        <div class="huapai-menu-item-right">
+                            <span class="huapai-menu-item-price">$28.00</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="huapai-menu-item">
+                    <div class="huapai-menu-item-content">
+                        <div class="huapai-menu-item-left">
+                            <h3 class="huapai-menu-item-title">Beef Tenderloin</h3>
+                            <div class="huapai-menu-item-description">
+                                <p>Premium beef tenderloin served with mashed potatoes and red wine jus</p>
+                            </div>
+                        </div>
+                        <div class="huapai-menu-item-right">
+                            <span class="huapai-menu-item-price">$35.00</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="section">
+            <h2>Key Features Implemented:</h2>
+            <ul>
+                <li><strong>Settings Page:</strong> New "Settings" submenu under "Menu Items" in WordPress admin</li>
+                <li><strong>Color Controls:</strong> Customizable colors for title, description, and price</li>
+                <li><strong>Font Size Controls:</strong> Customizable font sizes for all three elements</li>
+                <li><strong>Reduced Spacing:</strong> Less space between title and description (2px instead of 5px)</li>
+                <li><strong>Smaller Description:</strong> Description font is now 0.9em (90% of base size)</li>
+                <li><strong>Auto $ Symbol:</strong> Dollar sign is automatically added when saving prices</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>

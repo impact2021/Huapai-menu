@@ -6,10 +6,12 @@ A WordPress plugin to create and display restaurant menus with customizable menu
 
 - **Custom Menu Items**: Create menu items with name, description, and price
 - **Menu Groups**: Organize items into groups (e.g., Starters, Mains, Desserts, Drinks)
+- **Settings Page**: Customize text colors and font sizes for title, description, and price
 - **Easy Ordering**: Set order values to control menu item display sequence
 - **Shortcode Support**: Display any menu group using simple shortcodes
 - **Responsive Design**: Menu displays beautifully on all devices
 - **Clean Admin Interface**: Intuitive WordPress admin area for managing menus
+- **Automatic $ Symbol**: Dollar sign is automatically added to prices when saving
 
 ## Installation
 
@@ -31,10 +33,20 @@ A WordPress plugin to create and display restaurant menus with customizable menu
 1. Go to **Menu Items > Add New** in your WordPress admin
 2. Enter the **item name** in the title field (e.g., "Caesar Salad")
 3. Enter the **description** in the content editor (this will display in italics)
-4. Enter the **price** in the sidebar meta box (e.g., "$12.50")
+4. Enter the **price** in the sidebar meta box (e.g., "12.50" - the $ symbol will be added automatically)
 5. Select the **Menu Group** (e.g., Starters)
 6. Set the **Order** value to control the display order (lower numbers appear first)
 7. Click **Publish**
+
+### Customizing Menu Appearance
+
+1. Go to **Menu Items > Settings** in your WordPress admin
+2. Customize the following options:
+   - **Text Colors**: Set custom colors for title, description, and price
+   - **Font Sizes**: Adjust font sizes for title, description, and price
+3. Click **Save Settings** to apply your changes
+
+See [SETTINGS-GUIDE.md](SETTINGS-GUIDE.md) for detailed information about customization options.
 
 ### Reordering Menu Items
 
@@ -75,11 +87,12 @@ Crisp romaine lettuce with parmesan cheese and croutons
 The plugin includes default styling with:
 - Item name and description on the left
 - Price aligned to the right
-- Description text in italics
+- Description text in italics and smaller font (0.9em)
 - Light grey borders between items
 - Responsive design for mobile devices
+- Compact spacing between title and description
 
-You can customize the appearance by adding custom CSS to your theme targeting the `.huapai-menu-group` class and its child elements.
+You can customize colors and font sizes through the **Settings** page in the admin area, or add custom CSS to your theme targeting the `.huapai-menu-group` class and its child elements.
 
 ## Requirements
 
