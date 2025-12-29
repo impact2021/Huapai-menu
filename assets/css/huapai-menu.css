@@ -1,0 +1,74 @@
+/**
+ * Huapai Menu Frontend Styles
+ */
+
+.huapai-menu-group {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px 0;
+}
+
+.huapai-menu-item {
+    margin-bottom: 0;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #d3d3d3;
+}
+
+.huapai-menu-item:last-child {
+    border-bottom: none;
+}
+
+.huapai-menu-item-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 20px;
+}
+
+.huapai-menu-item-left {
+    flex: 1;
+}
+
+.huapai-menu-item-right {
+    flex-shrink: 0;
+    padding-top: 5px;
+}
+
+.huapai-menu-item-title {
+    margin: 0 0 5px 0;
+    font-size: 1.1em;
+    font-weight: 600;
+    line-height: 1.4;
+}
+
+.huapai-menu-item-description {
+    margin: 5px 0 0 0;
+    font-style: italic;
+    color: #666;
+    line-height: 1.5;
+}
+
+.huapai-menu-item-description p {
+    margin: 0 0 5px 0;
+}
+
+.huapai-menu-item-description p:last-child {
+    margin-bottom: 0;
+}
+
+.huapai-menu-item-price {
+    font-weight: 600;
+    font-size: 1em;
+    white-space: nowrap;
+}
+
+/* Responsive design for smaller screens */
+@media screen and (max-width: 600px) {
+    .huapai-menu-item-content {
+        gap: 10px;
+    }
+    
+    .huapai-menu-item-title {
+        font-size: 1em;
+    }
+}
