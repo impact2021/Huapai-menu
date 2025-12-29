@@ -27,7 +27,7 @@ function huapai_menu_register_post_type() {
     $labels = array(
         'name'                  => _x('Menu Items', 'Post Type General Name', 'huapai-menu'),
         'singular_name'         => _x('Menu Item', 'Post Type Singular Name', 'huapai-menu'),
-        'menu_name'             => __('Menu Items', 'huapai-menu'),
+        'menu_name'             => __('Huapai Menu', 'huapai-menu'),
         'name_admin_bar'        => __('Menu Item', 'huapai-menu'),
         'archives'              => __('Menu Archives', 'huapai-menu'),
         'attributes'            => __('Menu Attributes', 'huapai-menu'),
@@ -54,7 +54,7 @@ function huapai_menu_register_post_type() {
         'public'                => false,
         'show_ui'               => true,
         'show_in_menu'          => true,
-        'menu_position'         => 25,
+        'menu_position'         => 24,
         'menu_icon'             => 'dashicons-food',
         'show_in_admin_bar'     => true,
         'show_in_nav_menus'     => false,
@@ -305,3 +305,33 @@ function huapai_menu_price_column_orderby($query) {
     }
 }
 add_action('pre_get_posts', 'huapai_menu_price_column_orderby');
+
+/**
+ * Add shortcode column to menu groups taxonomy
+ */
+function huapai_menu_add_shortcode_column($columns) {
+    $new_columns = array();
+    foreach ($columns as $key => $value) {
+        $new_columns[$key] = $value;
+        if ($key === 'name') {
+            $new_columns['shortcode'] = __('Shortcode', 'huapai-menu');
+        }
+    }
+    return $new_columns;
+}
+add_filter('manage_edit-huapai_menu_group_columns', 'huapai_menu_add_shortcode_column');
+
+/**
+ * Display shortcode in menu groups taxonomy column
+ */
+function huapai_menu_display_shortcode_column($content, $column_name, $term_id) {
+    if ($column_name === 'shortcode') {
+        $term = get_term($term_id, 'huapai_menu_group');
+        if ($term && !is_wp_error($term)) {
+            $shortcode = '[huapai_menu group="' . esc_attr($term->slug) . '"]';
+            $content = '<code>' . esc_html($shortcode) . '</code>';
+        }
+    }
+    return $content;
+}
+add_filter('manage_huapai_menu_group_custom_column', 'huapai_menu_display_shortcode_column', 10, 3);
