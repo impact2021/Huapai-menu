@@ -21,6 +21,24 @@ define('HUAPAI_MENU_PLUGIN_DIR', plugin_dir_path(__FILE__));
 define('HUAPAI_MENU_PLUGIN_URL', plugin_dir_url(__FILE__));
 
 /**
+ * Sanitize font size input
+ */
+function huapai_menu_sanitize_font_size($font_size) {
+    // Remove any potentially harmful characters
+    $font_size = sanitize_text_field($font_size);
+    
+    // Check if the value matches a valid CSS font-size pattern
+    // Allows: numbers followed by units (px, em, rem, %, pt, vh, vw)
+    // or keywords (small, medium, large, etc.)
+    if (preg_match('/^(\d+\.?\d*)(px|em|rem|%|pt|vh|vw|ex|ch)$|^(xx-small|x-small|small|medium|large|x-large|xx-large|smaller|larger)$/i', $font_size)) {
+        return $font_size;
+    }
+    
+    // If invalid, return default empty string (will use CSS default)
+    return '';
+}
+
+/**
  * Add Settings Submenu
  */
 function huapai_menu_add_settings_page() {
@@ -45,12 +63,24 @@ function huapai_menu_settings_page_callback() {
 
     // Save settings
     if (isset($_POST['huapai_menu_settings_nonce']) && wp_verify_nonce($_POST['huapai_menu_settings_nonce'], 'huapai_menu_settings')) {
-        update_option('huapai_menu_title_color', sanitize_hex_color($_POST['huapai_menu_title_color']));
-        update_option('huapai_menu_description_color', sanitize_hex_color($_POST['huapai_menu_description_color']));
-        update_option('huapai_menu_price_color', sanitize_hex_color($_POST['huapai_menu_price_color']));
-        update_option('huapai_menu_title_font_size', sanitize_text_field($_POST['huapai_menu_title_font_size']));
-        update_option('huapai_menu_description_font_size', sanitize_text_field($_POST['huapai_menu_description_font_size']));
-        update_option('huapai_menu_price_font_size', sanitize_text_field($_POST['huapai_menu_price_font_size']));
+        if (isset($_POST['huapai_menu_title_color'])) {
+            update_option('huapai_menu_title_color', sanitize_hex_color($_POST['huapai_menu_title_color']));
+        }
+        if (isset($_POST['huapai_menu_description_color'])) {
+            update_option('huapai_menu_description_color', sanitize_hex_color($_POST['huapai_menu_description_color']));
+        }
+        if (isset($_POST['huapai_menu_price_color'])) {
+            update_option('huapai_menu_price_color', sanitize_hex_color($_POST['huapai_menu_price_color']));
+        }
+        if (isset($_POST['huapai_menu_title_font_size'])) {
+            update_option('huapai_menu_title_font_size', huapai_menu_sanitize_font_size($_POST['huapai_menu_title_font_size']));
+        }
+        if (isset($_POST['huapai_menu_description_font_size'])) {
+            update_option('huapai_menu_description_font_size', huapai_menu_sanitize_font_size($_POST['huapai_menu_description_font_size']));
+        }
+        if (isset($_POST['huapai_menu_price_font_size'])) {
+            update_option('huapai_menu_price_font_size', huapai_menu_sanitize_font_size($_POST['huapai_menu_price_font_size']));
+        }
         
         echo '<div class="notice notice-success is-dismissible"><p>' . __('Settings saved successfully.', 'huapai-menu') . '</p></div>';
     }
@@ -394,22 +424,45 @@ function huapai_menu_enqueue_styles() {
     $description_font_size = get_option('huapai_menu_description_font_size', '0.9em');
     $price_font_size = get_option('huapai_menu_price_font_size', '1em');
     
-    $custom_css = "
-        .huapai-menu-item-title {
-            color: {$title_color};
-            font-size: {$title_font_size};
-        }
-        .huapai-menu-item-description {
-            color: {$description_color};
-            font-size: {$description_font_size};
-        }
-        .huapai-menu-item-price {
-            color: {$price_color};
-            font-size: {$price_font_size};
-        }
-    ";
+    $custom_css = '';
     
-    wp_add_inline_style('huapai-menu-styles', $custom_css);
+    // Only add styles if we have valid values
+    if (!empty($title_color) || !empty($title_font_size)) {
+        $custom_css .= '.huapai-menu-item-title {';
+        if (!empty($title_color)) {
+            $custom_css .= 'color: ' . esc_attr($title_color) . ';';
+        }
+        if (!empty($title_font_size)) {
+            $custom_css .= 'font-size: ' . esc_attr($title_font_size) . ';';
+        }
+        $custom_css .= '}';
+    }
+    
+    if (!empty($description_color) || !empty($description_font_size)) {
+        $custom_css .= '.huapai-menu-item-description {';
+        if (!empty($description_color)) {
+            $custom_css .= 'color: ' . esc_attr($description_color) . ';';
+        }
+        if (!empty($description_font_size)) {
+            $custom_css .= 'font-size: ' . esc_attr($description_font_size) . ';';
+        }
+        $custom_css .= '}';
+    }
+    
+    if (!empty($price_color) || !empty($price_font_size)) {
+        $custom_css .= '.huapai-menu-item-price {';
+        if (!empty($price_color)) {
+            $custom_css .= 'color: ' . esc_attr($price_color) . ';';
+        }
+        if (!empty($price_font_size)) {
+            $custom_css .= 'font-size: ' . esc_attr($price_font_size) . ';';
+        }
+        $custom_css .= '}';
+    }
+    
+    if (!empty($custom_css)) {
+        wp_add_inline_style('huapai-menu-styles', $custom_css);
+    }
 }
 add_action('wp_enqueue_scripts', 'huapai_menu_enqueue_styles');
 
