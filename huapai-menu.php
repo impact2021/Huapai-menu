@@ -21,6 +21,140 @@ define('HUAPAI_MENU_PLUGIN_DIR', plugin_dir_path(__FILE__));
 define('HUAPAI_MENU_PLUGIN_URL', plugin_dir_url(__FILE__));
 
 /**
+ * Add Settings Submenu
+ */
+function huapai_menu_add_settings_page() {
+    add_submenu_page(
+        'edit.php?post_type=huapai_menu_item',
+        __('Settings', 'huapai-menu'),
+        __('Settings', 'huapai-menu'),
+        'manage_options',
+        'huapai-menu-settings',
+        'huapai_menu_settings_page_callback'
+    );
+}
+add_action('admin_menu', 'huapai_menu_add_settings_page');
+
+/**
+ * Settings Page Callback
+ */
+function huapai_menu_settings_page_callback() {
+    if (!current_user_can('manage_options')) {
+        return;
+    }
+
+    // Save settings
+    if (isset($_POST['huapai_menu_settings_nonce']) && wp_verify_nonce($_POST['huapai_menu_settings_nonce'], 'huapai_menu_settings')) {
+        update_option('huapai_menu_title_color', sanitize_hex_color($_POST['huapai_menu_title_color']));
+        update_option('huapai_menu_description_color', sanitize_hex_color($_POST['huapai_menu_description_color']));
+        update_option('huapai_menu_price_color', sanitize_hex_color($_POST['huapai_menu_price_color']));
+        update_option('huapai_menu_title_font_size', sanitize_text_field($_POST['huapai_menu_title_font_size']));
+        update_option('huapai_menu_description_font_size', sanitize_text_field($_POST['huapai_menu_description_font_size']));
+        update_option('huapai_menu_price_font_size', sanitize_text_field($_POST['huapai_menu_price_font_size']));
+        
+        echo '<div class="notice notice-success is-dismissible"><p>' . __('Settings saved successfully.', 'huapai-menu') . '</p></div>';
+    }
+
+    // Get current settings with defaults
+    $title_color = get_option('huapai_menu_title_color', '#000000');
+    $description_color = get_option('huapai_menu_description_color', '#666666');
+    $price_color = get_option('huapai_menu_price_color', '#000000');
+    $title_font_size = get_option('huapai_menu_title_font_size', '1.1em');
+    $description_font_size = get_option('huapai_menu_description_font_size', '0.9em');
+    $price_font_size = get_option('huapai_menu_price_font_size', '1em');
+    ?>
+    <div class="wrap">
+        <h1><?php echo esc_html(get_admin_page_title()); ?></h1>
+        <form method="post" action="">
+            <?php wp_nonce_field('huapai_menu_settings', 'huapai_menu_settings_nonce'); ?>
+            
+            <table class="form-table">
+                <tr>
+                    <th colspan="2"><h2><?php _e('Text Colors', 'huapai-menu'); ?></h2></th>
+                </tr>
+                <tr>
+                    <th scope="row">
+                        <label for="huapai_menu_title_color"><?php _e('Menu Item Title Color', 'huapai-menu'); ?></label>
+                    </th>
+                    <td>
+                        <input type="text" id="huapai_menu_title_color" name="huapai_menu_title_color" value="<?php echo esc_attr($title_color); ?>" class="huapai-color-picker" />
+                    </td>
+                </tr>
+                <tr>
+                    <th scope="row">
+                        <label for="huapai_menu_description_color"><?php _e('Description Color', 'huapai-menu'); ?></label>
+                    </th>
+                    <td>
+                        <input type="text" id="huapai_menu_description_color" name="huapai_menu_description_color" value="<?php echo esc_attr($description_color); ?>" class="huapai-color-picker" />
+                    </td>
+                </tr>
+                <tr>
+                    <th scope="row">
+                        <label for="huapai_menu_price_color"><?php _e('Price Color', 'huapai-menu'); ?></label>
+                    </th>
+                    <td>
+                        <input type="text" id="huapai_menu_price_color" name="huapai_menu_price_color" value="<?php echo esc_attr($price_color); ?>" class="huapai-color-picker" />
+                    </td>
+                </tr>
+                
+                <tr>
+                    <th colspan="2"><h2><?php _e('Font Sizes', 'huapai-menu'); ?></h2></th>
+                </tr>
+                <tr>
+                    <th scope="row">
+                        <label for="huapai_menu_title_font_size"><?php _e('Menu Item Title Font Size', 'huapai-menu'); ?></label>
+                    </th>
+                    <td>
+                        <input type="text" id="huapai_menu_title_font_size" name="huapai_menu_title_font_size" value="<?php echo esc_attr($title_font_size); ?>" placeholder="e.g., 1.1em, 18px" />
+                        <p class="description"><?php _e('Enter font size with units (e.g., 1.1em, 18px, 1.2rem)', 'huapai-menu'); ?></p>
+                    </td>
+                </tr>
+                <tr>
+                    <th scope="row">
+                        <label for="huapai_menu_description_font_size"><?php _e('Description Font Size', 'huapai-menu'); ?></label>
+                    </th>
+                    <td>
+                        <input type="text" id="huapai_menu_description_font_size" name="huapai_menu_description_font_size" value="<?php echo esc_attr($description_font_size); ?>" placeholder="e.g., 0.9em, 14px" />
+                        <p class="description"><?php _e('Enter font size with units (e.g., 0.9em, 14px, 0.9rem)', 'huapai-menu'); ?></p>
+                    </td>
+                </tr>
+                <tr>
+                    <th scope="row">
+                        <label for="huapai_menu_price_font_size"><?php _e('Price Font Size', 'huapai-menu'); ?></label>
+                    </th>
+                    <td>
+                        <input type="text" id="huapai_menu_price_font_size" name="huapai_menu_price_font_size" value="<?php echo esc_attr($price_font_size); ?>" placeholder="e.g., 1em, 16px" />
+                        <p class="description"><?php _e('Enter font size with units (e.g., 1em, 16px, 1rem)', 'huapai-menu'); ?></p>
+                    </td>
+                </tr>
+            </table>
+            
+            <?php submit_button(__('Save Settings', 'huapai-menu')); ?>
+        </form>
+    </div>
+    <?php
+}
+
+/**
+ * Enqueue color picker for settings page
+ */
+function huapai_menu_enqueue_admin_scripts($hook) {
+    if ($hook !== 'huapai_menu_item_page_huapai-menu-settings') {
+        return;
+    }
+    
+    wp_enqueue_style('wp-color-picker');
+    wp_enqueue_script('wp-color-picker');
+    
+    wp_add_inline_script('wp-color-picker', '
+        jQuery(document).ready(function($) {
+            $(".huapai-color-picker").wpColorPicker();
+        });
+    ');
+}
+add_action('admin_enqueue_scripts', 'huapai_menu_enqueue_admin_scripts');
+
+/**
  * Register Custom Post Type for Menu Items
  */
 function huapai_menu_register_post_type() {
@@ -135,10 +269,10 @@ function huapai_menu_price_callback($post) {
     ?>
     <p>
         <label for="huapai_menu_price"><?php _e('Price:', 'huapai-menu'); ?></label><br>
-        <input type="text" id="huapai_menu_price" name="huapai_menu_price" value="<?php echo esc_attr($price); ?>" style="width: 100%;" placeholder="e.g., $12.50" />
+        <input type="text" id="huapai_menu_price" name="huapai_menu_price" value="<?php echo esc_attr($price); ?>" style="width: 100%;" placeholder="e.g., 12.50" />
     </p>
     <p class="description">
-        <?php _e('Enter the price for this menu item. The title will be the item name, and the content editor below will be the description (will display in italics).', 'huapai-menu'); ?>
+        <?php _e('Enter the price for this menu item ($ symbol will be added automatically). The title will be the item name, and the content editor below will be the description (will display in italics).', 'huapai-menu'); ?>
     </p>
     <?php
 }
@@ -169,7 +303,12 @@ function huapai_menu_save_meta_box($post_id) {
 
     // Save price
     if (isset($_POST['huapai_menu_price'])) {
-        update_post_meta($post_id, '_huapai_menu_price', sanitize_text_field($_POST['huapai_menu_price']));
+        $price = sanitize_text_field($_POST['huapai_menu_price']);
+        // Automatically add $ symbol if not present
+        if (!empty($price) && strpos($price, '$') === false) {
+            $price = '$' . $price;
+        }
+        update_post_meta($post_id, '_huapai_menu_price', $price);
     }
 }
 add_action('save_post_huapai_menu_item', 'huapai_menu_save_meta_box');
@@ -246,6 +385,31 @@ add_shortcode('huapai_menu', 'huapai_menu_shortcode');
  */
 function huapai_menu_enqueue_styles() {
     wp_enqueue_style('huapai-menu-styles', HUAPAI_MENU_PLUGIN_URL . 'assets/css/huapai-menu.css', array(), HUAPAI_MENU_VERSION);
+    
+    // Add inline styles based on settings
+    $title_color = get_option('huapai_menu_title_color', '#000000');
+    $description_color = get_option('huapai_menu_description_color', '#666666');
+    $price_color = get_option('huapai_menu_price_color', '#000000');
+    $title_font_size = get_option('huapai_menu_title_font_size', '1.1em');
+    $description_font_size = get_option('huapai_menu_description_font_size', '0.9em');
+    $price_font_size = get_option('huapai_menu_price_font_size', '1em');
+    
+    $custom_css = "
+        .huapai-menu-item-title {
+            color: {$title_color};
+            font-size: {$title_font_size};
+        }
+        .huapai-menu-item-description {
+            color: {$description_color};
+            font-size: {$description_font_size};
+        }
+        .huapai-menu-item-price {
+            color: {$price_color};
+            font-size: {$price_font_size};
+        }
+    ";
+    
+    wp_add_inline_style('huapai-menu-styles', $custom_css);
 }
 add_action('wp_enqueue_scripts', 'huapai_menu_enqueue_styles');
 
