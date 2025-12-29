@@ -30,7 +30,7 @@ function huapai_menu_sanitize_font_size($font_size) {
     // Check if the value matches a valid CSS font-size pattern
     // Allows: numbers followed by units (px, em, rem, %, pt, vh, vw)
     // or keywords (small, medium, large, etc.)
-    if (preg_match('/^(\d+\.?\d*)(px|em|rem|%|pt|vh|vw|ex|ch)$|^(xx-small|x-small|small|medium|large|x-large|xx-large|smaller|larger)$/i', $font_size)) {
+    if (preg_match('/^(\d+(\.\d+)?|\d*\.\d+)(px|em|rem|%|pt|vh|vw|ex|ch)$|^(xx-small|x-small|small|medium|large|x-large|xx-large|smaller|larger)$/i', $font_size)) {
         return $font_size;
     }
     
