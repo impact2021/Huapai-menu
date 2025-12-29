@@ -215,8 +215,11 @@ function huapai_menu_shortcode($atts) {
                 <div class="huapai-menu-item-content">
                     <div class="huapai-menu-item-left">
                         <h3 class="huapai-menu-item-title"><?php the_title(); ?></h3>
-                        <?php if (get_the_content()) : ?>
-                            <div class="huapai-menu-item-description"><?php the_content(); ?></div>
+                        <?php 
+                        $content = get_the_content();
+                        if ($content) : 
+                        ?>
+                            <div class="huapai-menu-item-description"><?php echo wpautop(do_shortcode($content)); ?></div>
                         <?php endif; ?>
                     </div>
                     <div class="huapai-menu-item-right">
@@ -280,3 +283,25 @@ function huapai_menu_sortable_columns($columns) {
     return $columns;
 }
 add_filter('manage_edit-huapai_menu_item_sortable_columns', 'huapai_menu_sortable_columns');
+
+/**
+ * Modify query to handle price column sorting
+ */
+function huapai_menu_price_column_orderby($query) {
+    if (!is_admin() || !$query->is_main_query()) {
+        return;
+    }
+
+    // Only apply to menu item post type
+    if ($query->get('post_type') !== 'huapai_menu_item') {
+        return;
+    }
+
+    $orderby = $query->get('orderby');
+
+    if ('price' === $orderby) {
+        $query->set('meta_key', '_huapai_menu_price');
+        $query->set('orderby', 'meta_value_num');
+    }
+}
+add_action('pre_get_posts', 'huapai_menu_price_column_orderby');
