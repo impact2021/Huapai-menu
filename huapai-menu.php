@@ -166,21 +166,50 @@ function huapai_menu_settings_page_callback() {
 }
 
 /**
- * Enqueue color picker for settings page
+ * Enqueue admin scripts and styles
  */
 function huapai_menu_enqueue_admin_scripts($hook) {
-    if ($hook !== 'huapai_menu_item_page_huapai-menu-settings') {
-        return;
+    global $typenow;
+    
+    // Enqueue color picker for settings page
+    if ($hook === 'huapai_menu_item_page_huapai-menu-settings') {
+        wp_enqueue_style('wp-color-picker');
+        wp_enqueue_script('wp-color-picker');
+        
+        wp_add_inline_script('wp-color-picker', '
+            jQuery(document).ready(function($) {
+                $(".huapai-color-picker").wpColorPicker();
+            });
+        ');
     }
     
-    wp_enqueue_style('wp-color-picker');
-    wp_enqueue_script('wp-color-picker');
-    
-    wp_add_inline_script('wp-color-picker', '
-        jQuery(document).ready(function($) {
-            $(".huapai-color-picker").wpColorPicker();
-        });
-    ');
+    // Enqueue drag and drop scripts for menu items list page
+    if ($hook === 'edit.php' && $typenow === 'huapai_menu_item') {
+        // Enqueue jQuery UI Sortable
+        wp_enqueue_script('jquery-ui-sortable');
+        
+        // Enqueue custom admin script
+        wp_enqueue_script(
+            'huapai-menu-order',
+            HUAPAI_MENU_PLUGIN_URL . 'assets/js/admin-menu-order.js',
+            array('jquery', 'jquery-ui-sortable'),
+            HUAPAI_MENU_VERSION,
+            true
+        );
+        
+        // Localize script with nonce
+        wp_localize_script('huapai-menu-order', 'huapaiMenuOrder', array(
+            'nonce' => wp_create_nonce('huapai_menu_order_nonce'),
+        ));
+        
+        // Enqueue admin CSS
+        wp_enqueue_style(
+            'huapai-menu-admin-order',
+            HUAPAI_MENU_PLUGIN_URL . 'assets/css/admin-menu-order.css',
+            array(),
+            HUAPAI_MENU_VERSION
+        );
+    }
 }
 add_action('admin_enqueue_scripts', 'huapai_menu_enqueue_admin_scripts');
 
@@ -552,3 +581,97 @@ function huapai_menu_display_shortcode_column($content, $column_name, $term_id) 
     return $content;
 }
 add_filter('manage_huapai_menu_group_custom_column', 'huapai_menu_display_shortcode_column', 10, 3);
+
+/**
+ * Add menu group filter dropdown to admin list view
+ */
+function huapai_menu_add_group_filter() {
+    global $typenow;
+    
+    if ($typenow === 'huapai_menu_item') {
+        $taxonomy = 'huapai_menu_group';
+        $selected = isset($_GET[$taxonomy]) ? $_GET[$taxonomy] : '';
+        $info_taxonomy = get_taxonomy($taxonomy);
+        
+        wp_dropdown_categories(array(
+            'show_option_all' => __('All Menu Groups', 'huapai-menu'),
+            'taxonomy' => $taxonomy,
+            'name' => $taxonomy,
+            'orderby' => 'name',
+            'selected' => $selected,
+            'show_count' => true,
+            'hide_empty' => true,
+            'value_field' => 'slug',
+            'hierarchical' => true,
+        ));
+    }
+}
+add_action('restrict_manage_posts', 'huapai_menu_add_group_filter');
+
+/**
+ * Filter menu items by selected menu group
+ */
+function huapai_menu_filter_by_group($query) {
+    global $pagenow;
+    $taxonomy = 'huapai_menu_group';
+    
+    if ($pagenow === 'edit.php' && 
+        isset($_GET['post_type']) && 
+        $_GET['post_type'] === 'huapai_menu_item' && 
+        isset($_GET[$taxonomy]) && 
+        $_GET[$taxonomy] !== '') {
+        
+        $query->query_vars['tax_query'] = array(
+            array(
+                'taxonomy' => $taxonomy,
+                'field' => 'slug',
+                'terms' => $_GET[$taxonomy],
+            ),
+        );
+    }
+}
+add_filter('parse_query', 'huapai_menu_filter_by_group');
+
+/**
+ * AJAX handler to save menu item order
+ */
+function huapai_menu_save_order_ajax() {
+    // Check nonce
+    if (!isset($_POST['nonce']) || !wp_verify_nonce($_POST['nonce'], 'huapai_menu_order_nonce')) {
+        wp_send_json_error('Invalid nonce');
+        return;
+    }
+    
+    // Check user permissions
+    if (!current_user_can('edit_posts')) {
+        wp_send_json_error('Insufficient permissions');
+        return;
+    }
+    
+    // Get the order data
+    if (!isset($_POST['order']) || !is_array($_POST['order'])) {
+        wp_send_json_error('Invalid order data');
+        return;
+    }
+    
+    $order = $_POST['order'];
+    
+    // Update menu_order for each post
+    foreach ($order as $item) {
+        if (isset($item['id']) && isset($item['position'])) {
+            $post_id = intval($item['id']);
+            $position = intval($item['position']);
+            
+            // Verify this is a menu item post
+            if (get_post_type($post_id) === 'huapai_menu_item') {
+                wp_update_post(array(
+                    'ID' => $post_id,
+                    'menu_order' => $position,
+                ));
+            }
+        }
+    }
+    
+    wp_send_json_success('Order updated successfully');
+}
+add_action('wp_ajax_huapai_menu_save_order', 'huapai_menu_save_order_ajax');
