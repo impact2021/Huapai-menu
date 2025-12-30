@@ -197,9 +197,12 @@ function huapai_menu_enqueue_admin_scripts($hook) {
             true
         );
         
-        // Localize script with nonce
+        // Localize script with nonce and translatable strings
         wp_localize_script('huapai-menu-order', 'huapaiMenuOrder', array(
             'nonce' => wp_create_nonce('huapai_menu_order_nonce'),
+            'dragTipText' => __('You can drag and drop menu items to reorder them.', 'huapai-menu'),
+            'successText' => __('Menu order updated successfully.', 'huapai-menu'),
+            'errorText' => __('Error updating menu order.', 'huapai-menu'),
         ));
         
         // Enqueue admin CSS
@@ -617,17 +620,21 @@ function huapai_menu_filter_by_group($query) {
     
     if ($pagenow === 'edit.php' && 
         isset($_GET['post_type']) && 
-        $_GET['post_type'] === 'huapai_menu_item' && 
+        sanitize_text_field($_GET['post_type']) === 'huapai_menu_item' && 
         isset($_GET[$taxonomy]) && 
         $_GET[$taxonomy] !== '') {
         
-        $query->query_vars['tax_query'] = array(
-            array(
-                'taxonomy' => $taxonomy,
-                'field' => 'slug',
-                'terms' => sanitize_text_field($_GET[$taxonomy]),
-            ),
+        // Preserve existing tax_query if it exists
+        $tax_query = isset($query->query_vars['tax_query']) ? $query->query_vars['tax_query'] : array();
+        
+        // Add our menu group filter
+        $tax_query[] = array(
+            'taxonomy' => $taxonomy,
+            'field' => 'slug',
+            'terms' => sanitize_text_field($_GET[$taxonomy]),
         );
+        
+        $query->query_vars['tax_query'] = $tax_query;
     }
 }
 add_filter('parse_query', 'huapai_menu_filter_by_group');

@@ -57,7 +57,7 @@
                             success: function(response) {
                                 if (response.success) {
                                     // Show success message
-                                    var $notice = $('<div class="notice notice-success is-dismissible"><p>Menu order updated successfully.</p></div>');
+                                    var $notice = $('<div class="notice notice-success is-dismissible"><p>' + huapaiMenuOrder.successText + '</p></div>');
                                     $('.wp-header-end').after($notice);
                                     setTimeout(function() {
                                         $notice.fadeOut(function() {
@@ -66,12 +66,12 @@
                                     }, 3000);
                                 } else {
                                     // Show error message
-                                    var $notice = $('<div class="notice notice-error is-dismissible"><p>Error updating menu order.</p></div>');
+                                    var $notice = $('<div class="notice notice-error is-dismissible"><p>' + huapaiMenuOrder.errorText + '</p></div>');
                                     $('.wp-header-end').after($notice);
                                 }
                             },
                             error: function() {
-                                var $notice = $('<div class="notice notice-error is-dismissible"><p>Error updating menu order.</p></div>');
+                                var $notice = $('<div class="notice notice-error is-dismissible"><p>' + huapaiMenuOrder.errorText + '</p></div>');
                                 $('.wp-header-end').after($notice);
                             }
                         });
@@ -79,7 +79,7 @@
                 });
                 
                 // Add a notice to inform users they can drag and drop
-                var $dragNotice = $('<div class="notice notice-info"><p><strong>Tip:</strong> You can drag and drop menu items to reorder them.</p></div>');
+                var $dragNotice = $('<div class="notice notice-info"><p><strong>Tip:</strong> ' + huapaiMenuOrder.dragTipText + '</p></div>');
                 $('.wp-header-end').after($dragNotice);
             }
         }
