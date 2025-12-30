@@ -6,8 +6,9 @@ A WordPress plugin to create and display restaurant menus with customizable menu
 
 - **Custom Menu Items**: Create menu items with name, description, and price
 - **Menu Groups**: Organize items into groups (e.g., Starters, Mains, Desserts, Drinks)
+- **Drag & Drop Ordering**: Easily reorder menu items by dragging and dropping them in the admin list
+- **Group Filtering**: Filter menu items by group in the admin interface for easier management
 - **Settings Page**: Customize text colors and font sizes for title, description, and price
-- **Easy Ordering**: Set order values to control menu item display sequence
 - **Shortcode Support**: Display any menu group using simple shortcodes
 - **Responsive Design**: Menu displays beautifully on all devices
 - **Clean Admin Interface**: Intuitive WordPress admin area for managing menus
@@ -51,8 +52,13 @@ See [SETTINGS-GUIDE.md](SETTINGS-GUIDE.md) for detailed information about custom
 ### Reordering Menu Items
 
 You can reorder menu items by:
+- **Drag and Drop** (Recommended): Simply drag and drop menu items in the admin list view to reorder them. The order is saved automatically.
 - Setting different **Order** values in the Page Attributes box (lower numbers appear first)
 - Or using the Quick Edit feature from the menu items list
+
+### Filtering Menu Items
+
+In the admin menu items list, you can filter items by menu group using the dropdown at the top of the page. This makes it easier to manage items within specific groups (e.g., only show Starters).
 
 ### Displaying Menus on Your Site
 
