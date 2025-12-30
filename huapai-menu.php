@@ -534,7 +534,7 @@ function huapai_menu_sortable_columns($columns) {
 add_filter('manage_edit-huapai_menu_item_sortable_columns', 'huapai_menu_sortable_columns');
 
 /**
- * Modify query to handle price column sorting
+ * Modify query to handle price column sorting and default ordering
  */
 function huapai_menu_price_column_orderby($query) {
     if (!is_admin() || !$query->is_main_query()) {
@@ -551,6 +551,11 @@ function huapai_menu_price_column_orderby($query) {
     if ('price' === $orderby) {
         $query->set('meta_key', '_huapai_menu_price');
         $query->set('orderby', 'meta_value_num');
+    } elseif (empty($orderby)) {
+        // Set default ordering to menu_order when no orderby is specified
+        // This ensures drag-and-drop order persists on page refresh
+        $query->set('orderby', 'menu_order');
+        $query->set('order', 'ASC');
     }
 }
 add_action('pre_get_posts', 'huapai_menu_price_column_orderby');
