@@ -1,0 +1,28 @@
+/**
+ * Admin Styles for Drag and Drop
+ */
+
+/* Sortable placeholder style */
+.ui-sortable-placeholder {
+    visibility: visible !important;
+    background-color: #f0f0f0;
+    border: 2px dashed #c3c4c7;
+}
+
+/* Dragging helper style */
+.ui-sortable-helper {
+    opacity: 0.8;
+    background-color: #fff;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+/* Row hover state */
+body.post-type-huapai_menu_item #the-list tr:hover {
+    background-color: #f6f7f7;
+}
+
+/* Visual indicator for drag handle */
+body.post-type-huapai_menu_item #the-list tr {
+    transition: background-color 0.2s ease;
+    cursor: move;
+}
