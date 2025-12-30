@@ -10,6 +10,24 @@
             var $table = $('#the-list');
             
             if ($table.length) {
+                /**
+                 * Helper function to show admin notices
+                 */
+                function showNotice(type, message, autoHide) {
+                    var $notice = $('<div class="notice is-dismissible"><p></p></div>');
+                    $notice.addClass('notice-' + type);
+                    $notice.find('p').text(message);
+                    $('.wp-header-end').after($notice);
+                    
+                    if (autoHide) {
+                        setTimeout(function() {
+                            $notice.fadeOut(function() {
+                                $(this).remove();
+                            });
+                        }, 3000);
+                    }
+                }
+                
                 // Make the table rows sortable
                 $table.sortable({
                     items: 'tr',
@@ -56,30 +74,21 @@
                             },
                             success: function(response) {
                                 if (response.success) {
-                                    // Show success message
-                                    var $notice = $('<div class="notice notice-success is-dismissible"><p>' + huapaiMenuOrder.successText + '</p></div>');
-                                    $('.wp-header-end').after($notice);
-                                    setTimeout(function() {
-                                        $notice.fadeOut(function() {
-                                            $(this).remove();
-                                        });
-                                    }, 3000);
+                                    showNotice('success', huapaiMenuOrder.successText, true);
                                 } else {
-                                    // Show error message
-                                    var $notice = $('<div class="notice notice-error is-dismissible"><p>' + huapaiMenuOrder.errorText + '</p></div>');
-                                    $('.wp-header-end').after($notice);
+                                    showNotice('error', huapaiMenuOrder.errorText, false);
                                 }
                             },
                             error: function() {
-                                var $notice = $('<div class="notice notice-error is-dismissible"><p>' + huapaiMenuOrder.errorText + '</p></div>');
-                                $('.wp-header-end').after($notice);
+                                showNotice('error', huapaiMenuOrder.errorText, false);
                             }
                         });
                     }
                 });
                 
                 // Add a notice to inform users they can drag and drop
-                var $dragNotice = $('<div class="notice notice-info"><p><strong>Tip:</strong> ' + huapaiMenuOrder.dragTipText + '</p></div>');
+                var $dragNotice = $('<div class="notice notice-info"><p></p></div>');
+                $dragNotice.find('p').html('<strong>Tip:</strong> ' + $('<div>').text(huapaiMenuOrder.dragTipText).html());
                 $('.wp-header-end').after($dragNotice);
             }
         }

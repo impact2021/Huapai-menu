@@ -644,7 +644,7 @@ add_filter('parse_query', 'huapai_menu_filter_by_group');
  */
 function huapai_menu_save_order_ajax() {
     // Check nonce
-    if (!isset($_POST['nonce']) || !wp_verify_nonce($_POST['nonce'], 'huapai_menu_order_nonce')) {
+    if (!isset($_POST['nonce']) || !wp_verify_nonce(sanitize_text_field($_POST['nonce']), 'huapai_menu_order_nonce')) {
         wp_send_json_error('Invalid nonce');
         return;
     }
