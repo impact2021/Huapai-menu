@@ -328,6 +328,8 @@ function huapai_menu_price_callback($post) {
     wp_nonce_field('huapai_menu_price_nonce', 'huapai_menu_price_nonce');
     
     $price = get_post_meta($post->ID, '_huapai_menu_price', true);
+    $gluten_free = get_post_meta($post->ID, '_huapai_menu_gluten_free', true);
+    $nut_free = get_post_meta($post->ID, '_huapai_menu_nut_free', true);
     ?>
     <p>
         <label for="huapai_menu_price"><?php _e('Price:', 'huapai-menu'); ?></label><br>
@@ -335,6 +337,18 @@ function huapai_menu_price_callback($post) {
     </p>
     <p class="description">
         <?php _e('Enter the price for this menu item ($ symbol will be added automatically). The title will be the item name, and the content editor below will be the description (will display in italics).', 'huapai-menu'); ?>
+    </p>
+    <p>
+        <label>
+            <input type="checkbox" id="huapai_menu_gluten_free" name="huapai_menu_gluten_free" value="1" <?php checked($gluten_free, '1'); ?> />
+            <?php _e('Gluten Free', 'huapai-menu'); ?>
+        </label>
+    </p>
+    <p>
+        <label>
+            <input type="checkbox" id="huapai_menu_nut_free" name="huapai_menu_nut_free" value="1" <?php checked($nut_free, '1'); ?> />
+            <?php _e('Nut Free', 'huapai-menu'); ?>
+        </label>
     </p>
     <?php
 }
@@ -371,6 +385,20 @@ function huapai_menu_save_meta_box($post_id) {
             $price = '$' . $price;
         }
         update_post_meta($post_id, '_huapai_menu_price', $price);
+    }
+    
+    // Save gluten free checkbox
+    if (isset($_POST['huapai_menu_gluten_free'])) {
+        update_post_meta($post_id, '_huapai_menu_gluten_free', '1');
+    } else {
+        delete_post_meta($post_id, '_huapai_menu_gluten_free');
+    }
+    
+    // Save nut free checkbox
+    if (isset($_POST['huapai_menu_nut_free'])) {
+        update_post_meta($post_id, '_huapai_menu_nut_free', '1');
+    } else {
+        delete_post_meta($post_id, '_huapai_menu_nut_free');
     }
 }
 add_action('save_post_huapai_menu_item', 'huapai_menu_save_meta_box');
@@ -415,7 +443,23 @@ function huapai_menu_shortcode($atts) {
             <div class="huapai-menu-item">
                 <div class="huapai-menu-item-content">
                     <div class="huapai-menu-item-left">
-                        <h3 class="huapai-menu-item-title"><?php the_title(); ?></h3>
+                        <h3 class="huapai-menu-item-title">
+                            <?php the_title(); ?>
+                            <?php 
+                            $gluten_free = get_post_meta(get_the_ID(), '_huapai_menu_gluten_free', true);
+                            $nut_free = get_post_meta(get_the_ID(), '_huapai_menu_nut_free', true);
+                            
+                            if ($gluten_free || $nut_free) : ?>
+                                <span class="huapai-menu-dietary-icons">
+                                    <?php if ($gluten_free) : ?>
+                                        <span class="huapai-menu-icon huapai-menu-gluten-free" title="<?php esc_attr_e('Gluten Free', 'huapai-menu'); ?>">GF</span>
+                                    <?php endif; ?>
+                                    <?php if ($nut_free) : ?>
+                                        <span class="huapai-menu-icon huapai-menu-nut-free" title="<?php esc_attr_e('Nut Free', 'huapai-menu'); ?>">NF</span>
+                                    <?php endif; ?>
+                                </span>
+                            <?php endif; ?>
+                        </h3>
                         <?php 
                         $content = apply_filters('the_content', get_the_content());
                         if ($content) : 

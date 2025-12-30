@@ -6,6 +6,7 @@ A WordPress plugin to create and display restaurant menus with customizable menu
 
 - **Custom Menu Items**: Create menu items with name, description, and price
 - **Menu Groups**: Organize items into groups (e.g., Starters, Mains, Desserts, Drinks)
+- **Dietary Indicators**: Mark items as Gluten Free or Nut Free with small colored badge icons
 - **Drag & Drop Ordering**: Easily reorder menu items by dragging and dropping them in the admin list
 - **Group Filtering**: Filter menu items by group in the admin interface for easier management
 - **Settings Page**: Customize text colors and font sizes for title, description, and price
@@ -35,9 +36,10 @@ A WordPress plugin to create and display restaurant menus with customizable menu
 2. Enter the **item name** in the title field (e.g., "Caesar Salad")
 3. Enter the **description** in the content editor (this will display in italics)
 4. Enter the **price** in the sidebar meta box (e.g., "12.50" - the $ symbol will be added automatically)
-5. Select the **Menu Group** (e.g., Starters)
-6. Set the **Order** value to control the display order (lower numbers appear first)
-7. Click **Publish**
+5. Check **Gluten Free** or **Nut Free** if applicable (these will display as small colored badges on the menu)
+6. Select the **Menu Group** (e.g., Starters)
+7. Set the **Order** value to control the display order (lower numbers appear first)
+8. Click **Publish**
 
 ### Customizing Menu Appearance
 
