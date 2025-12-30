@@ -590,7 +590,7 @@ function huapai_menu_add_group_filter() {
     
     if ($typenow === 'huapai_menu_item') {
         $taxonomy = 'huapai_menu_group';
-        $selected = isset($_GET[$taxonomy]) ? $_GET[$taxonomy] : '';
+        $selected = isset($_GET[$taxonomy]) ? sanitize_text_field($_GET[$taxonomy]) : '';
         $info_taxonomy = get_taxonomy($taxonomy);
         
         wp_dropdown_categories(array(
@@ -625,7 +625,7 @@ function huapai_menu_filter_by_group($query) {
             array(
                 'taxonomy' => $taxonomy,
                 'field' => 'slug',
-                'terms' => $_GET[$taxonomy],
+                'terms' => sanitize_text_field($_GET[$taxonomy]),
             ),
         );
     }
