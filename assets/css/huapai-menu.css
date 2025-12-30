@@ -67,6 +67,34 @@
     white-space: nowrap;
 }
 
+/* Dietary Icons */
+.huapai-menu-dietary-icons {
+    display: inline-block;
+    margin-left: 8px;
+}
+
+.huapai-menu-icon {
+    display: inline-block;
+    font-size: 0.65em;
+    font-weight: 700;
+    padding: 2px 6px;
+    border-radius: 3px;
+    margin-left: 4px;
+    vertical-align: middle;
+    line-height: 1.2;
+    letter-spacing: 0.5px;
+}
+
+.huapai-menu-gluten-free {
+    background-color: #3498db;
+    color: white;
+}
+
+.huapai-menu-nut-free {
+    background-color: #e67e22;
+    color: white;
+}
+
 /* Responsive design for smaller screens */
 @media screen and (max-width: 600px) {
     .huapai-menu-item-content {
@@ -75,5 +103,10 @@
     
     .huapai-menu-item-title {
         font-size: 1em;
+    }
+    
+    .huapai-menu-icon {
+        font-size: 0.6em;
+        padding: 2px 5px;
     }
 }
