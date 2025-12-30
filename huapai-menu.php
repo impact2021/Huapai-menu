@@ -643,7 +643,7 @@ function huapai_menu_save_order_ajax() {
     }
     
     // Check user permissions
-    if (!current_user_can('edit_posts')) {
+    if (!current_user_can('edit_others_posts')) {
         wp_send_json_error('Insufficient permissions');
         return;
     }
@@ -654,21 +654,27 @@ function huapai_menu_save_order_ajax() {
         return;
     }
     
-    $order = $_POST['order'];
-    
     // Update menu_order for each post
-    foreach ($order as $item) {
-        if (isset($item['id']) && isset($item['position'])) {
-            $post_id = intval($item['id']);
-            $position = intval($item['position']);
-            
-            // Verify this is a menu item post
-            if (get_post_type($post_id) === 'huapai_menu_item') {
-                wp_update_post(array(
-                    'ID' => $post_id,
-                    'menu_order' => $position,
-                ));
-            }
+    foreach ($_POST['order'] as $item) {
+        // Sanitize and validate each item
+        if (!is_array($item) || !isset($item['id']) || !isset($item['position'])) {
+            continue;
+        }
+        
+        $post_id = absint($item['id']);
+        $position = absint($item['position']);
+        
+        // Skip if invalid data
+        if ($post_id === 0) {
+            continue;
+        }
+        
+        // Verify this is a menu item post
+        if (get_post_type($post_id) === 'huapai_menu_item') {
+            wp_update_post(array(
+                'ID' => $post_id,
+                'menu_order' => $position,
+            ));
         }
     }
     

@@ -15,7 +15,6 @@
                     items: 'tr',
                     cursor: 'move',
                     axis: 'y',
-                    handle: '.column-title, td:not(.column-cb)',
                     placeholder: 'ui-sortable-placeholder',
                     helper: function(e, tr) {
                         var $originals = tr.children();
@@ -78,9 +77,6 @@
                         });
                     }
                 });
-
-                // Add cursor style to indicate draggable rows
-                $table.find('tr').css('cursor', 'move');
                 
                 // Add a notice to inform users they can drag and drop
                 var $dragNotice = $('<div class="notice notice-info"><p><strong>Tip:</strong> You can drag and drop menu items to reorder them.</p></div>');

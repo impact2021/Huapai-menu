@@ -24,4 +24,5 @@ body.post-type-huapai_menu_item #the-list tr:hover {
 /* Visual indicator for drag handle */
 body.post-type-huapai_menu_item #the-list tr {
     transition: background-color 0.2s ease;
+    cursor: move;
 }
